@@ -59,5 +59,33 @@ namespace MonopolyTestTask.Tests
 
             Assert.Equal(DateTime.MaxValue.Date, palette.ExperationDate);
         }
+
+        [Fact]
+        public void AddBox_Valid_Box_Added_Into_Collection_Test()
+        {
+            var box = new Box { Id = 1, Height = 10, Width = 10 };
+            var pallet = new Pallet { Height = 10, Width = 100 };
+
+            pallet.AddBox(box);
+            var resultBox = pallet.Boxes.ToList();
+
+            Assert.Equal(1, pallet.Boxes.Count);
+            Assert.Equal(resultBox[0].Id, box.Id);
+        }
+
+        [Theory]
+        [InlineData("Width", 1000, 10)]
+        [InlineData("Height", 10, 1000)]
+        
+        public void AddBox_Invalid_Box_Throws_ArgumentOutOfRangeException_Test(string argument, int boxWidth, int boxHeight)
+        {
+            var box = new Box { Id = 1, Height = boxHeight, Width = boxWidth };
+            var pallet = new Pallet { Height = 10, Width = 100 };
+
+
+            var exception = Assert.Throws<ArgumentOutOfRangeException>(() => pallet.AddBox(box));
+            Assert.Equal($"{argument} of box is greater than {argument} of pallet (Parameter 'box')", exception.Message);
+        }
     }
 }
+

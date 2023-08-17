@@ -29,6 +29,17 @@ public class Pallet
 
     public ICollection<Box> Boxes { get; set; } = new List<Box>();
 
+    public void AddBox(Box box)
+    {
+        if (box.Width > Width || box.Height > Height)
+        {
+            var argument = box.Width > Width ? "Width" : "Height";
+            throw new ArgumentOutOfRangeException(nameof(box), $"{argument} of box is greater than {argument} of pallet");
+        }
+
+        Boxes.Add(box);
+    }
+
     public override string ToString()
     {
         return $"Pallet #{Id}:" + 
